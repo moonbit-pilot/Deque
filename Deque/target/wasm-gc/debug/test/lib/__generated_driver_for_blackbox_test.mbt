@@ -2,13 +2,13 @@
 
 fn moonbit_test_driver_internal_error_to_string(x : Error) -> String = "%error.to_string"
 
-typealias Moonbit_Test_Driver_Internal_No_Args_Map = @moonbitlang/core/builtin.Map[
+typealias @moonbitlang/core/builtin.Map[
   String,
   @moonbitlang/core/builtin.Map[
     Int,
-    (() -> Unit!Error, @moonbitlang/core/builtin.Array[String]),
+    (() -> Unit raise Error, @moonbitlang/core/builtin.Array[String]),
   ],
-]
+] as Moonbit_Test_Driver_Internal_No_Args_Map
 
 let moonbit_test_driver_internal_no_args_tests : Moonbit_Test_Driver_Internal_No_Args_Map = {
   "hello_test.mbt": {
@@ -19,7 +19,6 @@ let moonbit_test_driver_internal_no_args_tests : Moonbit_Test_Driver_Internal_No
     4: (__test_68656c6c6f5f746573742e6d6274_4, ["empty deque"]),
   },
 }
-
 
 pub fn moonbit_test_driver_internal_execute(filename: MoonbitTestDriverInternalExternString, index: Int) -> Unit {
   let file_filter = moonbit_test_driver_internal_get_file_name(filename)
@@ -43,9 +42,9 @@ pub fn moonbit_test_driver_internal_execute(filename: MoonbitTestDriverInternalE
       }
       test_name = name
       try {
-        func!()
+        func()
       } catch {
-        Failure(e) | InspectError(e) | SnapshotError(e) => {
+        @moonbitlang/core/builtin.Failure(e) | @moonbitlang/core/builtin.InspectError(e) | @moonbitlang/core/builtin.SnapshotError(e) => {
           message = e
         }
         e => {
@@ -53,7 +52,7 @@ pub fn moonbit_test_driver_internal_execute(filename: MoonbitTestDriverInternalE
         }
       }
     }
-    _ => { message = "internal error: failed to filter test with (\{file_filter}, \{index_filter})" }
+    _ => { message = "skipped test" }
   }
 
   let file_name = file_filter.escape()
@@ -70,18 +69,20 @@ pub fn moonbit_test_driver_finish() -> Unit {
   
 }
 
+#test_entry
 fn main {
   ()
 }
-
 
 fn moonbit_test_driver_internal_get_file_name(file_name : MoonbitTestDriverInternalExternString) -> String {
   moonbit_test_driver_internal_string_from_extern(file_name)
 }
 
-extern type MoonbitTestDriverInternalStringReadHandle
+#external
+type MoonbitTestDriverInternalStringReadHandle
 
-extern type MoonbitTestDriverInternalExternString
+#external
+type MoonbitTestDriverInternalExternString
 
 fn moonbit_test_driver_internal_begin_read_string(s : MoonbitTestDriverInternalExternString) -> MoonbitTestDriverInternalStringReadHandle = "__moonbit_fs_unstable" "begin_read_string"
 
@@ -90,6 +91,8 @@ fn moonbit_test_driver_internal_string_read_char(handle : MoonbitTestDriverInter
 fn moonbit_test_driver_internal_finish_read_string(handle : MoonbitTestDriverInternalStringReadHandle) = "__moonbit_fs_unstable" "finish_read_string"
 
 fn fixedarray_to_bytes(arr : FixedArray[Byte]) -> Bytes = "%identity"
+
+fn moonbit_unsafe_char_from_int(x : Int) -> Char = "%identity"
 
 fn moonbit_test_driver_internal_string_from_extern(e : MoonbitTestDriverInternalExternString) -> String {
   let buf = FixedArray::make(512, Byte::default())
@@ -100,7 +103,7 @@ fn moonbit_test_driver_internal_string_from_extern(e : MoonbitTestDriverInternal
     if ch == -1 {
       break
     } else {
-      let written_bytes_len = buf.set_utf16le_char(len, Char::from_int(ch))
+      let written_bytes_len = buf.set_utf16le_char(len, moonbit_unsafe_char_from_int(ch))
       len += written_bytes_len
     }
   }

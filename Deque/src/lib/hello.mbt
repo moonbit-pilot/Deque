@@ -11,7 +11,7 @@ pub struct Deque[T] {
 
 /// Create a new Deque with initial capacity
 ///|
-pub fn Deque::new[T](initial_capacity~ : Int = 16) -> Deque[T] {
+pub fn[T] Deque::new(initial_capacity~ : Int = 16) -> Deque[T] {
   {
     data: Array::new(capacity=initial_capacity),
     front: 0,
@@ -22,22 +22,22 @@ pub fn Deque::new[T](initial_capacity~ : Int = 16) -> Deque[T] {
 }
 
 /// Check if the deque is empty
-pub fn Deque::is_empty[T](self: Deque[T]) -> Bool {
+pub fn[T] Deque::is_empty(self: Deque[T]) -> Bool {
   self.size == 0
 }
 
 /// Get the current size of the deque
-pub fn Deque::length[T](self: Deque[T]) -> Int {
+pub fn[T] Deque::length(self: Deque[T]) -> Int {
   self.size
 }
 
 /// Get the current capacity of the deque
-pub fn Deque::capacity[T](self: Deque[T]) -> Int {
+pub fn[T] Deque::capacity(self: Deque[T]) -> Int {
   self.capacity
 }
 
 /// Add an element to the front of the deque
-pub fn Deque::push_front[T](self: Deque[T], value: T) -> Unit {
+pub fn[T] Deque::push_front(self: Deque[T], value: T) -> Unit {
   if self.size == self.capacity {
     self.grow()
   }
@@ -47,7 +47,7 @@ pub fn Deque::push_front[T](self: Deque[T], value: T) -> Unit {
 }
 
 /// Add an element to the back of the deque
-pub fn Deque::push_back[T](self: Deque[T], value: T) -> Unit {
+pub fn[T] Deque::push_back(self: Deque[T], value: T) -> Unit {
   if self.size == self.capacity {
     self.grow()
   }
@@ -57,7 +57,7 @@ pub fn Deque::push_back[T](self: Deque[T], value: T) -> Unit {
 }
 
 /// Remove and return the front element
-pub fn Deque::pop_front[T](self: Deque[T]) -> T? {
+pub fn[T] Deque::pop_front(self: Deque[T]) -> T? {
   if self.is_empty() {
     None
   } else {
@@ -69,7 +69,7 @@ pub fn Deque::pop_front[T](self: Deque[T]) -> T? {
 }
 
 /// Remove and return the back element
-pub fn Deque::pop_back[T](self: Deque[T]) -> T? {
+pub fn[T] Deque::pop_back(self: Deque[T]) -> T? {
   if self.is_empty() {
     None
   } else {
@@ -81,7 +81,7 @@ pub fn Deque::pop_back[T](self: Deque[T]) -> T? {
 }
 
 /// Get the front element without removing it
-pub fn Deque::front[T](self: Deque[T]) -> T? {
+pub fn[T] Deque::front(self: Deque[T]) -> T? {
   if self.is_empty() {
     None
   } else {
@@ -90,7 +90,7 @@ pub fn Deque::front[T](self: Deque[T]) -> T? {
 }
 
 /// Get the back element without removing it
-pub fn Deque::back[T](self: Deque[T]) -> T? {
+pub fn[T] Deque::back(self: Deque[T]) -> T? {
   if self.is_empty() {
     None
   } else {
@@ -101,7 +101,7 @@ pub fn Deque::back[T](self: Deque[T]) -> T? {
 
 /// Internal function to grow the capacity when full
 ///|
-fn Deque::grow[T](self : Deque[T]) -> Unit {
+fn[T] Deque::grow(self : Deque[T]) -> Unit {
   let new_capacity = self.capacity * 2
   let new_data = Array::new(capacity=new_capacity)
 
@@ -118,13 +118,13 @@ fn Deque::grow[T](self : Deque[T]) -> Unit {
   self.capacity = new_capacity
 }
 /// Clear all elements from the deque
-pub fn Deque::clear[T](self: Deque[T]) -> Unit {
+pub fn[T] Deque::clear(self: Deque[T]) -> Unit {
   self.front = 0
   self.back = 0
   self.size = 0
 }
 /// Get element at index
-pub fn Deque::get[T](self: Deque[T], index: Int) -> T? {
+pub fn[T] Deque::get(self: Deque[T], index: Int) -> T? {
   if index < 0 || index >= self.size {
     None
   } else {
@@ -133,7 +133,7 @@ pub fn Deque::get[T](self: Deque[T], index: Int) -> T? {
   }
 }
 /// Set element at index
-pub fn Deque::set[T](self: Deque[T], index: Int, value: T) -> Bool {
+pub fn[T] Deque::set(self: Deque[T], index: Int, value: T) -> Bool {
   if index < 0 || index >= self.size {
     false
   } else {
@@ -145,7 +145,7 @@ pub fn Deque::set[T](self: Deque[T], index: Int, value: T) -> Bool {
 /// Convert deque to array
 
 /// Iterate through all elements
-pub fn Deque::each[T](self: Deque[T], f: (T) -> Unit) -> Unit {
+pub fn[T] Deque::each(self: Deque[T], f: (T) -> Unit) -> Unit {
   let mut i = 0
   while i < self.size {
     let index = (self.front + i) % self.capacity
@@ -154,7 +154,7 @@ pub fn Deque::each[T](self: Deque[T], f: (T) -> Unit) -> Unit {
   }
 }
 /// Iterate with index through all elements
-pub fn Deque::eachi[T](self: Deque[T], f: (Int, T) -> Unit) -> Unit {
+pub fn[T] Deque::eachi(self: Deque[T], f: (Int, T) -> Unit) -> Unit {
   let mut i = 0
   while i < self.size {
     let index = (self.front + i) % self.capacity
@@ -163,7 +163,7 @@ pub fn Deque::eachi[T](self: Deque[T], f: (Int, T) -> Unit) -> Unit {
   }
 }
 
-pub fn Deque::iter[T](self: Deque[T]) -> Iter[T] {
+pub fn[T] Deque::iter(self: Deque[T]) -> Iter[T] {
   Iter::new(fn(f: (T) -> IterResult) -> IterResult {
     let mut i = 0
     while i < self.size {
@@ -177,7 +177,7 @@ pub fn Deque::iter[T](self: Deque[T]) -> Iter[T] {
   })
 }
 /// Reverse the deque in-place
-pub fn Deque::reverse[T](self: Deque[T]) -> Unit {
+pub fn[T] Deque::reverse(self: Deque[T]) -> Unit {
   let mut start = 0
   let mut end = self.size - 1
   
@@ -193,7 +193,7 @@ pub fn Deque::reverse[T](self: Deque[T]) -> Unit {
 }
 
 /// Remove element at index
-pub fn Deque::remove[T](self: Deque[T], index: Int) -> T? {
+pub fn[T] Deque::remove(self: Deque[T], index: Int) -> T? {
   if index < 0 || index >= self.size {
     None
   } else {
